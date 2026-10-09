@@ -1,0 +1,4 @@
+---
+import { siteConfig } from '../config'; const year=new Date().getFullYear(); const contacts=[siteConfig.email?{href:`mailto:${siteConfig.email}`,label:'Email'}:null,siteConfig.telegram?{href:siteConfig.telegram,label:'Telegram'}:null,{href:siteConfig.github,label:'GitHub'}].filter(Boolean);
+---
+<footer class="site-footer"><div class="container"><span>© {year} Максим Ремизов</span><nav class="footer-links" aria-label="Ссылки в подвале"><a href="/">Обо мне</a><a href="/works">Работы</a><a href="/articles">Статьи</a><a href="/contacts">Контакты</a>{contacts.map((contact)=><a href={contact!.href} rel="me">{contact!.label}</a>)}</nav></div></footer>

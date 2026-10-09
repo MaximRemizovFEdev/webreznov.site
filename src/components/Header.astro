@@ -1,0 +1,4 @@
+---
+const current = Astro.url.pathname; const links = [{href:'/',label:'Обо мне',active:current==='/'},{href:'/works',label:'Работы',active:current.startsWith('/works')},{href:'/articles',label:'Статьи',active:current.startsWith('/articles')},{href:'/contacts',label:'Контакты',active:current.startsWith('/contacts')}];
+---
+<header class="site-header"><nav class="container" aria-label="Основная навигация">{links.map((link)=><a class="nav-link" href={link.href} aria-current={link.active?'page':undefined}>{link.label}</a>)}</nav></header>

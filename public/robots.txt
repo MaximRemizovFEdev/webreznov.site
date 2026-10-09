@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://webreznov.site/sitemap-index.xml

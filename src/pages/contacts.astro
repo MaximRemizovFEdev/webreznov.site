@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'; import {siteConfig} from '../config';
+const contacts=[siteConfig.email?{href:`mailto:${siteConfig.email}`,label:siteConfig.email}:null,siteConfig.telegram?{href:siteConfig.telegram,label:'Telegram'}:null,{href:siteConfig.github,label:'GitHub'}].filter(Boolean);
+---
+<BaseLayout title="Контакты — Максим Ремизов"><div class="page-intro"><div class="eyebrow">Контакты</div><h1>Связаться со мной</h1><p>Открыт к интересным задачам, продуктам и сотрудничеству.</p></div><ul class="list">{contacts.map((contact)=><li class="list-item"><a href={contact!.href} rel="me">{contact!.label}</a></li>)}</ul></BaseLayout>

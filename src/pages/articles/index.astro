@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'; import {getPublishedPosts} from '../../lib/blog';
+const posts=await getPublishedPosts(); const formatDate=(date:Date)=>date.toLocaleDateString('ru-RU',{year:'numeric',month:'long',day:'numeric'});
+---
+<BaseLayout title="Статьи — Максим Ремизов"><div class="page-intro"><div class="eyebrow">Статьи</div><h1>Мысли и опыт</h1><p>Заметки о frontend-разработке, продуктах, автоматизации и технологиях.</p></div>{posts.length?<ul class="list">{posts.map((post)=><li class="list-item"><div class="meta">{formatDate(post.data.pubDate)}</div><h2><a href={`/articles/${post.id}`}>{post.data.title}</a></h2><p>{post.data.description}</p></li>)}</ul>:<section class="section"><p>Пока нет опубликованных статей.</p><a class="back-link" href="/rss.xml">Подписаться на RSS →</a></section>}</BaseLayout>

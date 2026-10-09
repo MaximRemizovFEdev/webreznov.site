@@ -1,0 +1,6 @@
+---
+import {getCollection,render} from 'astro:content'; import BaseLayout from '../../layouts/BaseLayout.astro'; import {getPublishedPosts} from '../../lib/blog';
+export async function getStaticPaths(){const posts=await getPublishedPosts(); return posts.map((post)=>({params:{id:post.id},props:{post}}));}
+const {post}=Astro.props; const {Content}=await render(post); const formatDate=(date:Date)=>date.toLocaleDateString('ru-RU',{year:'numeric',month:'long',day:'numeric'});
+---
+<BaseLayout title={`${post.data.title} — Максим Ремизов`} description={post.data.description} type="article"><article><header class="article-header"><div class="eyebrow">Статья</div><h1>{post.data.title}</h1><div class="meta">{formatDate(post.data.pubDate)}{post.data.updatedDate&&` · обновлено ${formatDate(post.data.updatedDate)}`}</div></header><div class="article-body"><Content/></div><a class="back-link" href="/articles">← Все статьи</a></article></BaseLayout>
