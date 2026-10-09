@@ -1,2 +1,19 @@
-import rss from '@astrojs/rss'; import type {APIRoute} from 'astro'; import {getPublishedPosts} from '../lib/blog'; import {siteConfig} from '../config';
-export const GET:APIRoute=async(context)=>{const posts=await getPublishedPosts(); return rss({title:`${siteConfig.name} — статьи`,description:siteConfig.description,site:siteConfig.url,customData:'<language>ru</language>',items:posts.map((post)=>({title:post.data.title,description:post.data.description,pubDate:post.data.pubDate,link:`/articles/${post.id}`}))});};
+import rss from "@astrojs/rss";
+import type { APIRoute } from "astro";
+import { getPublishedPosts } from "../lib/blog";
+import { siteConfig } from "../config";
+export const GET: APIRoute = async (context) => {
+  const posts = await getPublishedPosts();
+  return rss({
+    title: `${siteConfig.name} — статьи`,
+    description: siteConfig.description,
+    site: siteConfig.url,
+    customData: "<language>ru</language>",
+    items: posts.map((post) => ({
+      title: post.data.title,
+      description: post.data.description,
+      pubDate: post.data.pubDate,
+      link: `/articles/${post.id}`,
+    })),
+  });
+};
