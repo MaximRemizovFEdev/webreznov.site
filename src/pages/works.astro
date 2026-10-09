@@ -1,4 +1,20 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPublishedWorks } from '../lib/works';
+const works = await getPublishedWorks();
 ---
-<BaseLayout title="Работы — Максим Ремизов"><div class="page-intro"><div class="eyebrow">Работы</div><h1>Проекты и продукты</h1><p>Развиваю собственные идеи и помогаю командам создавать понятные цифровые продукты.</p></div><ul class="list"><li class="list-item"><h2>Ай да сказка</h2><p>Генератор персонализированных детских сказок с иллюстрациями.</p></li></ul></BaseLayout>
+<BaseLayout title="Работы — Максим Ремизов">
+  <div class="page-intro">
+    <div class="eyebrow">Работы</div>
+    <h1>Проекты и продукты</h1>
+    <p>Развиваю собственные идеи и помогаю командам создавать понятные цифровые продукты.</p>
+  </div>
+  <ul class="list">
+    {works.map((work) => (
+      <li class="list-item">
+        <h2><a href={`/works/${work.id}`}>{work.data.title}</a></h2>
+        <p>{work.data.description}</p>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

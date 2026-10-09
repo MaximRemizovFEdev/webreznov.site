@@ -1,0 +1,30 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPublishedWorks } from '../../lib/works';
+
+export async function getStaticPaths() {
+  const works = await getPublishedWorks();
+  return works.map((work) => ({ params: { id: work.id }, props: { work } }));
+}
+
+interface Props {
+  work: CollectionEntry<'works'>;
+}
+
+const { work } = Astro.props;
+const { Content } = await render(work);
+---
+<BaseLayout title={`${work.data.title} — Максим Ремизов`} description={work.data.description}>
+  <article>
+    <header class="article-header">
+      <div class="eyebrow">Проект</div>
+      <h1>{work.data.title}</h1>
+      <p>{work.data.description}</p>
+      {work.data.role && <p class="meta">Роль: {work.data.role}</p>}
+      {work.data.url && <a class="accent" href={work.data.url}>Открыть проект ↗</a>}
+    </header>
+    <div class="article-body"><Content /></div>
+    <a class="back-link" href="/works">← Все работы</a>
+  </article>
+</BaseLayout>
