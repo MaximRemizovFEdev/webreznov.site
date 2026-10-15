@@ -1,33 +1,40 @@
 
-name: Deploy to GitHub Pages
+name: Deploy Astro to Beget
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build Astro
-        uses: withastro/action@v6
+        run: npm run build
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: $&#123;&#123; steps.deployment.outputs.page_url &#125;&#125;
-    steps:
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v5
+      - name: Deploy to Beget via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: /f91056pk.beget.tech/public_html/
+          dangerous-clean-slate: false
