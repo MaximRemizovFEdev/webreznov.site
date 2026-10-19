@@ -1,5 +1,5 @@
 
-name: Deploy Astro to Beget
+name: Deploy Astro to VPS
 
 on:
   push:
@@ -28,13 +28,24 @@ jobs:
       - name: Build Astro
         run: npm run build
 
-      - name: Deploy to Beget via FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          local-dir: ./dist/
-          server-dir: /f91056pk.beget.tech/public_html/
-          dangerous-clean-slate: false
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.VPS_SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=yes" \
+            ./dist/ \
+            "$VPS_USER@$VPS_HOST:/var/www/webreznov/"
